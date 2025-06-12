@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+<!--Тело документа с фоновым цветом bg-light (светло-серый), заданным из Bootstrap.-->
+<div class="container mt-5">
+<!--    Контейнер с отступом сверху (mt-5) — обертка для содержимого.-->
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+<!--            Создаётся строка (row) и колонка, выровненная по центру. На средних экранах занимает 6 колонок, на больших — 4.-->
+            <div class="card shadow">
+                <div class="card-body">
+<!--                    Карточка с тенью (shadow) — визуальный блок Bootstrap. Внутри — card-body, где размещается контент.-->
+                    <h2 class="card-title text-center mb-4">Please sign in DV</h2>
+<!--                    Заголовок формы, выровненный по центру, с нижним отступом-->
+                    <div th:if="${param.error}" class="alert alert-danger">
+                        Invalid username or password.
+                    </div>
+<!--                    Если в параметрах запроса есть error, отображается красное предупреждение. Thymeleaf читает ?error=true из URL.-->
+                    <div th:if="${param.logout}" class="alert alert-success">
+                        You have been logged out.
+                    </div>
+<!--                    Показывает зелёное уведомление после выхода (?logout в URL).-->
+                    <div th:if="${param.expired}" class="alert alert-warning">
+                        Your session has expired. Please login again.
+                    </div>
+<!--                    Показывает оранжевое уведомление, если сессия истекла (?expired в URL).-->
+                    <form th:action="@{/perform_login}" method="post">
+<!--                        Форма логина. Действие (th:action) — отправка POST-запроса на /perform_login, как указано в SecurityConfig.-->
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" required autofocus>
+                        </div>
+<!--                        Поле ввода имени пользователя. Метка + поле. Атрибуты:-->
+<!--                        required — обязательно для заполнения.-->
+<!--                        autofocus — сразу фокус на поле при открытии страницы.-->
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+<!--                        Аналогично для пароля. Тип password скрывает ввод.-->
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="remember-me" name="remember-me">
+                            <label class="form-check-label" for="remember-me">Remember me DV</label>
+                        </div>
+<!--                        Чекбокс для функции "Запомнить меня" (remember-me), которая работает при наличии rememberMe() в SecurityConfig.-->
+                        <button type="submit" class="btn btn-primary w-100">Sign in DV</button>
+<!--                        Кнопка входа. Bootstrap-класс btn-primary, ширина — 100% (w-100).-->
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
