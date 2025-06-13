@@ -17,7 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
-    private Environment environment;
+    private final Environment environment;
 
     public SecurityConfig(UserDetailsService userDetailsService, Environment environment) {
         this.userDetailsService = userDetailsService;
@@ -29,7 +29,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/webjars/**", "/error").permitAll()
-                        .requestMatchers("/login*").permitAll()
+                        .requestMatchers("/login","/login/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -45,20 +45,20 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID")
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
-                        .permitAll()
                 )
                 .rememberMe(remember -> remember
                         .key(environment.getProperty("security.remember-me.key"))
-                        .tokenValiditySeconds(86400) // 24 hours
+                        .tokenValiditySeconds(28800)
                         .userDetailsService(userDetailsService)
                 )
                 .sessionManagement(session -> session
+                        .invalidSessionUrl("/login?session=expired")
                         .maximumSessions(1)
                         .maxSessionsPreventsLogin(false)
-                        .expiredUrl("/login?expired")
+                        .expiredUrl("/login?session=expired")
                 )
                 .exceptionHandling(exception -> exception
-                        .accessDeniedPage("/access-denied")
+                        .accessDeniedPage("/login?error=access_denied")
                 );
 
         return http.build();
