@@ -1,4 +1,4 @@
-package com.github.schneidervs.invoicecreator;
+package com.github.schneidervs.invoicecreator.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

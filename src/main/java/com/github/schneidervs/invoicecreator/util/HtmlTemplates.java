@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.schneidervs.invoicecreator;
+package com.github.schneidervs.invoicecreator.util;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -15,7 +15,7 @@
             <div class="card shadow">
                 <div class="card-body">
 <!--                    Карточка с тенью (shadow) — визуальный блок Bootstrap. Внутри — card-body, где размещается контент.-->
-                    <h2 class="card-title text-center mb-4">Please sign in DV</h2>
+                    <h2 class="card-title text-center mb-4">Please sign in</h2>
 <!--                    Заголовок формы, выровненный по центру, с нижним отступом-->
                     <div th:if="${param.error}" class="alert alert-danger">
                         Invalid username or password.
@@ -45,10 +45,10 @@
 <!--                        Аналогично для пароля. Тип password скрывает ввод.-->
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="remember-me" name="remember-me">
-                            <label class="form-check-label" for="remember-me">Remember me DV</label>
+                            <label class="form-check-label" for="remember-me">Remember me</label>
                         </div>
 <!--                        Чекбокс для функции "Запомнить меня" (remember-me), которая работает при наличии rememberMe() в SecurityConfig.-->
-                        <button type="submit" class="btn btn-primary w-100">Sign in DV</button>
+                        <button type="submit" class="btn btn-primary w-100">Sign in</button>
 <!--                        Кнопка входа. Bootstrap-класс btn-primary, ширина — 100% (w-100).-->
                     </form>
                 </div>

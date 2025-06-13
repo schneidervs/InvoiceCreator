@@ -1,4 +1,4 @@
-package com.github.schneidervs.invoicecreator;
+package com.github.schneidervs.invoicecreator.model;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;

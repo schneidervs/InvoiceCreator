@@ -1,5 +1,7 @@
-package com.github.schneidervs.invoicecreator;
+package com.github.schneidervs.invoicecreator.service;
 
+import com.github.schneidervs.invoicecreator.model.User;
+import com.github.schneidervs.invoicecreator.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

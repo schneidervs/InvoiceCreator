@@ -1,5 +1,6 @@
-package com.github.schneidervs.invoicecreator;
+package com.github.schneidervs.invoicecreator.service;
 
+import com.github.schneidervs.invoicecreator.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

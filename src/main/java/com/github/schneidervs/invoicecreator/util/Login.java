@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.schneidervs.invoicecreator;
+package com.github.schneidervs.invoicecreator.util;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
