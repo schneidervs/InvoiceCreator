@@ -29,7 +29,6 @@ public class UserService {
     }
 
     public User save(User user) {
-        // шифруем пароль перед сохранением
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
