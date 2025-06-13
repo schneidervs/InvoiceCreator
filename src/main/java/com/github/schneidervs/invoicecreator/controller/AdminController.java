@@ -11,6 +11,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+    private static final String REDIRECT_USERS = "redirect:/admin/users";
 
     private final UserService userService; // ваш сервис пользователей
 
@@ -32,14 +33,40 @@ public class AdminController {
     }
 
     @PostMapping("/users/save")
-    public String saveUser(@ModelAttribute("user") User user) {
-        userService.save(user);
-        return "redirect:/admin/users";
+    public String createUser(@ModelAttribute("user") User user) {
+        userService.create(user);
+        return REDIRECT_USERS;
     }
 
     @PostMapping("/users/delete/{id}")
     public String deleteUser(@PathVariable Long id) {
         userService.deleteById(id);
-        return "redirect:/admin/users";
+        return REDIRECT_USERS;
+    }
+
+    @GetMapping("/users/edit/{id}")
+    public String showEditUserForm(@PathVariable Long id, Model model) {
+        User user = userService.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        model.addAttribute("user", user);
+        model.addAttribute("roles", List.of(Role.values()));
+        return "admin/edit-user";
+    }
+
+    @PostMapping("/users/update")
+    public String updateUser(
+            @RequestParam(value = "id", required = false) Long id, //kostyl
+            @ModelAttribute("user") User updatedUser) {
+
+        User existingUser = userService.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + updatedUser.getId()));
+        existingUser.setRoles(updatedUser.getRoles());
+        existingUser.setEnabled(updatedUser.isEnabled());
+        existingUser.setAccountNonExpired(updatedUser.isAccountNonExpired());
+        existingUser.setAccountNonLocked(updatedUser.isAccountNonLocked());
+        existingUser.setCredentialsNonExpired(updatedUser.isCredentialsNonExpired());
+
+        userService.update(existingUser);
+        return REDIRECT_USERS;
     }
 }

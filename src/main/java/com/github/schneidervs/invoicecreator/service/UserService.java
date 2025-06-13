@@ -28,9 +28,9 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    public User save(User user) {
+    public void create(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     public void deleteById(Long id) {
@@ -39,5 +39,13 @@ public class UserService {
 
     public boolean userExists(String username) {
         return userRepository.findByUsername(username).isPresent();
+    }
+
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
+    }
+
+    public void update(User user) {
+        userRepository.save(user);
     }
 }
