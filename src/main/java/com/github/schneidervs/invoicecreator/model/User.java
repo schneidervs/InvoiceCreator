@@ -38,6 +38,10 @@ public class User implements UserDetails {
                 .toList();
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public void setPassword(String password) {
         this.password = password;
        }
@@ -94,5 +98,9 @@ public class User implements UserDetails {
 
     public void setRoles(Set<String> roles) {
         this.roles = roles;
+    }
+
+    public Set<String> getRoles() {
+        return roles;
     }
 }
