@@ -31,6 +31,10 @@ public class InvoiceService {
         return repository.findAll(spec, Sort.by(Sort.Direction.DESC, "issueDate"));
     }
 
+    public Invoice saveInvoice(Invoice invoice) {
+        return repository.save(invoice);
+    }
+
     public void saveTestInvoicesIfEmpty() {
         if (repository.count() == 0) {
             List<Invoice> testInvoices = List.of(
@@ -72,5 +76,4 @@ public class InvoiceService {
         inv.setCreatedBy(createdBy);
         return inv;
     }
-
 }
