@@ -51,6 +51,12 @@ public class InvoiceController {
 
         invoiceService.saveInvoice(invoice);
 
-        return "redirect:/invoices/invoices";
+        return "redirect:/invoices";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String deleteInvoice(@PathVariable Long id) {
+        invoiceService.deleteInvoice(id);
+        return "redirect:/invoices";
     }
 }

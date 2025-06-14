@@ -76,4 +76,8 @@ public class InvoiceService {
         inv.setCreatedBy(createdBy);
         return inv;
     }
+
+    public void deleteInvoice(Long id) {
+        repository.deleteById(id);
+    }
 }
