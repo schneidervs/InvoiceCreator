@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class InvoiceService {
@@ -79,5 +80,14 @@ public class InvoiceService {
 
     public void deleteInvoice(Long id) {
         repository.deleteById(id);
+    }
+
+    public Invoice getInvoiceById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Invoice not found with id " + id));
+    }
+
+    public Optional<Invoice> findInvoiceById(Long id) {
+        return repository.findById(id);
     }
 }
