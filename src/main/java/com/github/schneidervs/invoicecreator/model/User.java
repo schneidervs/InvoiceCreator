@@ -38,6 +38,9 @@ public class User implements UserDetails {
                 .toList();
     }
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private UserData userData;
+
     public Long getId() {
         return id;
     }
@@ -102,5 +105,13 @@ public class User implements UserDetails {
 
     public Set<String> getRoles() {
         return roles;
+    }
+
+    public UserData getUserData() {
+        return userData;
+    }
+
+    public void setUserData(UserData userData) {
+        this.userData = userData;
     }
 }
