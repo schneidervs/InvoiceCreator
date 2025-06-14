@@ -21,7 +21,7 @@ public class InvoiceController {
         this.invoiceService = invoiceService;
     }
 
-    @GetMapping
+    @GetMapping("")
     public String viewInvoices(
             @RequestParam(required = false)
             String query, Model model) {
@@ -33,7 +33,7 @@ public class InvoiceController {
 
         model.addAttribute("invoices", invoices);
         model.addAttribute("query", query);
-        return "invoices";
+        return "invoices/invoices";
     }
 
     @GetMapping("/new")
@@ -41,19 +41,16 @@ public class InvoiceController {
         model.addAttribute("invoice", new Invoice());
         model.addAttribute("today", LocalDate.now());
         model.addAttribute("dueDate", LocalDate.now().plusDays(14));
-        return "create-invoice";
+        return "invoices/create-invoice";
     }
 
     @PostMapping("/save")
     public String saveInvoice(@ModelAttribute("invoice") Invoice invoice) {
-        // Устанавливаем имя текущего пользователя
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         invoice.setCreatedBy(auth.getName());
 
-        // Сохраняем фактуру
         invoiceService.saveInvoice(invoice);
 
-        // Перенаправляем на страницу со списком фактур
-        return "redirect:/invoices";
+        return "redirect:/invoices/invoices";
     }
 }

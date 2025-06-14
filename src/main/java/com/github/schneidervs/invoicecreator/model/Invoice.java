@@ -23,6 +23,10 @@ public class Invoice {
     private LocalDate dueDate;
     private String createdBy;
 
+    public Long getId() {
+        return id;
+    }
+
     public String getInvoiceNumber() {
         return invoiceNumber;
     }

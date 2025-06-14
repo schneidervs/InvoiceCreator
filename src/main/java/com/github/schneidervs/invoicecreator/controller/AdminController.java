@@ -13,7 +13,7 @@ import java.util.List;
 public class AdminController {
     private static final String REDIRECT_USERS = "redirect:/admin/users";
 
-    private final UserService userService; // ваш сервис пользователей
+    private final UserService userService;
 
     public AdminController(UserService userService) {
         this.userService = userService;
