@@ -1,7 +1,7 @@
 package com.github.schneidervs.invoicecreator.controller;
 
 import com.github.schneidervs.invoicecreator.model.*;
-import com.github.schneidervs.invoicecreator.service.UserService;
+import com.github.schneidervs.invoicecreator.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +14,13 @@ public class AdminController {
     private static final String REDIRECT_USERS = "redirect:/admin/users";
 
     private final UserService userService;
+    private final PositionService positionService;
+    private final DepartmentService departmentService;
 
-    public AdminController(UserService userService) {
+    public AdminController(UserService userService, PositionService positionService, DepartmentService departmentService) {
         this.userService = userService;
+        this.positionService = positionService;
+        this.departmentService = departmentService;
     }
 
     @GetMapping("/users")
@@ -50,6 +54,8 @@ public class AdminController {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         model.addAttribute("user", user);
         model.addAttribute("roles", List.of(Role.values()));
+        model.addAttribute("positions", positionService.findAll());
+        model.addAttribute("departments", departmentService.findAll());
         return "admin/edit-user";
     }
 
