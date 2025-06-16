@@ -48,6 +48,11 @@
                             <textarea class="form-control" id="serviceDescription" th:field="*{serviceDescription}" rows="3" required></textarea>
                         </div>
 
+                        <div class="col-md-3">
+                            <label for="createdBy" class="form-label">Author</label>
+                            <input type="text" class="form-control" id="createdBy" th:field="*{createdBy}" readonly>
+                        </div>
+
                         <!-- Amounts -->
                         <div class="row mb-3">
                             <div class="col-md-4">

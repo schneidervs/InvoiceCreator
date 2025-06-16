@@ -1,7 +1,7 @@
 package com.github.schneidervs.invoicecreator.controller;
 
 import com.github.schneidervs.invoicecreator.model.Invoice;
-import com.github.schneidervs.invoicecreator.service.InvoiceService;
+import com.github.schneidervs.invoicecreator.service.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -17,9 +17,11 @@ public class InvoiceController {
     private static final String REDIRECT_INVOICES = "redirect:/invoices";
 
     private final InvoiceService invoiceService;
+    private final UserService userService;
 
-    public InvoiceController(InvoiceService invoiceService) {
+    public InvoiceController(InvoiceService invoiceService, UserService userService) {
         this.invoiceService = invoiceService;
+        this.userService = userService;
     }
 
     @GetMapping("")
@@ -48,7 +50,9 @@ public class InvoiceController {
     @PostMapping("/save")
     public String saveInvoice(@ModelAttribute("invoice") Invoice invoice) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        invoice.setCreatedBy(auth.getName());
+        String username = auth.getName();
+        String fullName = userService.getUserFullNameByUsername(username);
+        invoice.setCreatedBy(fullName);
         invoiceService.saveInvoice(invoice);
         return REDIRECT_INVOICES;
     }

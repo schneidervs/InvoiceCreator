@@ -1,7 +1,8 @@
 package com.github.schneidervs.invoicecreator.service;
 
-import com.github.schneidervs.invoicecreator.model.User;
+import com.github.schneidervs.invoicecreator.model.*;
 import com.github.schneidervs.invoicecreator.repository.UserRepository;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -47,5 +48,13 @@ public class UserService {
 
     public void update(User user) {
         userRepository.save(user);
+    }
+
+    public String getUserFullNameByUsername(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+
+        UserData userData = user.getUserData();
+        return userData.getFirstName() + " " + userData.getLastName();
     }
 }
