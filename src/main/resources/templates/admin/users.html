@@ -19,6 +19,10 @@
         <tr>
             <th>ID</th>
             <th>Username</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Position</th>
+            <th>Department</th>
             <th>Enabled</th>
             <th>Account Non-Expired</th>
             <th>Account Non-Locked</th>
@@ -31,6 +35,10 @@
         <tr th:each="user : ${users}">
             <td th:text="${user.id}">1</td>
             <td th:text="${user.username}">admin</td>
+            <td th:text="${user.userData?.firstName}">Anna</td>
+            <td th:text="${user.userData?.lastName}">Nowak</td>
+            <td th:text="${user.userData?.position?.name}">Manager</td>
+            <td th:text="${user.userData?.department?.name}">IT</td>
             <td th:text="${user.enabled}">true</td>
             <td th:text="${user.accountNonExpired}">true</td>
             <td th:text="${user.accountNonLocked}">true</td>
@@ -48,7 +56,7 @@
             </td>
         </tr>
         <tr th:if="${#lists.isEmpty(users)}">
-            <td colspan="4" class="text-center">No users found.</td>
+            <td colspan="12" class="text-center">No users found.</td>
         </tr>
         </tbody>
     </table>
