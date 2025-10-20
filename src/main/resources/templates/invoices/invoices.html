@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Invoices</title>
@@ -20,7 +20,8 @@
         </form>
 
         <div class="mb-3">
-            <a th:href="@{/invoices/new}" class="btn btn-primary">Create New Invoice</a>
+            <a th:href="@{/invoices/new}" class="btn btn-success">Create New Invoice</a>
+            <a th:href="@{/home}" class="btn btn-primary ms-2">Back to Home</a>
         </div>
 
         <table class="table table-striped">
@@ -68,14 +69,6 @@
                             <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                         </form>
                     </td>
-<!--                    <td>-->
-<!--                        <a th:href="@{'/invoices/edit/' + ${invoice.id}}" class="btn btn-sm btn-primary me-1">Edit</a>-->
-<!--                        <form th:action="@{'/invoices/delete/' + ${invoice.id}}" method="post"-->
-<!--                              onsubmit="return confirm('Are you sure you want to delete this invoice?');"-->
-<!--                              style="display:inline;">-->
-<!--                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>-->
-<!--                        </form>-->
-<!--                    </td>-->
                 </tr>
                 <tr th:if="${#lists.isEmpty(invoices)}">
                     <td colspan="5" class="text-center">No invoices found.</td>
