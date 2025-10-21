@@ -25,6 +25,18 @@
         <span th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
             <a th:href="@{/positions}" class="btn btn-outline-warning ms-2">Manage Positions</a>
         </span>
+
+        <span th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+            <a th:href="@{/my-company}" class="btn btn-outline-warning ms-2">Manage Company</a>
+        </span>
+
+        <form th:action="@{/perform_logout}" method="post" style="display: inline;">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <button type="submit" class="btn btn-outline-danger ms-2"
+                    onclick="return confirm('Are you sure you want to log out?');">
+                Logout
+            </button>
+        </form>
     </nav>
 </div>
 </body>

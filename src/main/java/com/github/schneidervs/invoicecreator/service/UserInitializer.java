@@ -16,16 +16,19 @@ public class UserInitializer {
     private final PasswordEncoder passwordEncoder;
     private final PositionRepository positionRepository;
     private final DepartmentRepository departmentRepository;
+    private final MyCompanyRepository myCompanyRepository;
     private final Logger logger = LoggerFactory.getLogger(UserInitializer.class);
 
     public UserInitializer(UserRepository userRepository,
                            PasswordEncoder passwordEncoder,
                            PositionRepository positionRepository,
-                           DepartmentRepository departmentRepository) {
+                           DepartmentRepository departmentRepository,
+                           MyCompanyRepository myCompanyRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.positionRepository = positionRepository;
         this.departmentRepository = departmentRepository;
+        this.myCompanyRepository = myCompanyRepository;
     }
 
     @PostConstruct
@@ -83,5 +86,29 @@ public class UserInitializer {
 
         userRepository.save(user);
         logger.info("Created user: {}", username);
+        initCompany();
+    }
+
+    private void initCompany() {
+        if (myCompanyRepository.count() > 0) {
+            logger.info("Company already exists — skipping.");
+            return;
+        }
+
+        MyCompany company = new MyCompany();
+        company.setName("Invoice Creator Company");
+        company.setStreet("ul. Marszałkowska");
+        company.setHouseNumber("1");
+        company.setPostalCode("00-693");
+        company.setCity("Warszawa");
+        company.setPhoneFax("+48 123 456 789");
+        company.setRegion("Mazowieckie");
+        company.setNip("1234567890");
+        company.setBdoRegistrationNumber("12345678901234");
+        company.setBankName("Bank PKO BP");
+        company.setBankAccountNumber("PL 00 0000 0000 0000 0000 0000 0000");
+
+        myCompanyRepository.save(company);
+        logger.info("Created company: {}", company.getName());
     }
 }
