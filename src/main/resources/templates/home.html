@@ -20,6 +20,11 @@
         <span th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
             <a th:href="@{/departments}" class="btn btn-outline-warning ms-2">Manage Departments</a>
         </span>
+
+        <!-- Ссылка на управление должностями видна только админам -->
+        <span th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+            <a th:href="@{/positions}" class="btn btn-outline-warning ms-2">Manage Positions</a>
+        </span>
     </nav>
 </div>
 </body>

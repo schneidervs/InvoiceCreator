@@ -22,4 +22,20 @@ public class PositionService {
     public Optional<Position> findById(Long id) {
         return positionRepository.findById(id);
     }
+
+    public void create(Position position) {
+        positionRepository.save(position);
+    }
+
+    public void update(Position position) {
+        positionRepository.save(position);
+    }
+
+    public void deleteById(Long id) {
+        positionRepository.deleteById(id);
+    }
+
+    public boolean positionExists(String name) {
+        return positionRepository.findByName(name).isPresent();
+    }
 }
