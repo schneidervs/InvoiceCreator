@@ -2,6 +2,7 @@ package com.github.schneidervs.invoicecreator.controller;
 
 import com.github.schneidervs.invoicecreator.model.Invoice;
 import com.github.schneidervs.invoicecreator.service.*;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/invoices")
@@ -40,17 +42,27 @@ public class InvoiceController {
     }
 
     @GetMapping("/new")
-    public String showCreateForm(Model model) {
+    public String showCreateForm(Model model, HttpServletResponse response) {
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Expires", "0");
+
+        model.addAttribute("token", UUID.randomUUID());
         model.addAttribute("invoice", new Invoice());
         model.addAttribute("today", LocalDate.now());
         model.addAttribute("dueDate", LocalDate.now().plusDays(14));
-        return "invoices/new-invoice";
+        return "/invoices/new-invoice";
     }
 
     @PostMapping("/save")
     public String saveInvoice(@ModelAttribute("invoice") Invoice invoice) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
+        String username;
+        if (auth != null) {
+            username = auth.getName();
+        } else {
+            username = "anonymous";
+        }
         String fullName = userService.getUserFullNameByUsername(username);
         invoice.setCreatedBy(fullName);
         invoiceService.saveInvoice(invoice);
