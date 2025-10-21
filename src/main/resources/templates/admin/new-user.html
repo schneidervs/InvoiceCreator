@@ -24,9 +24,31 @@
             <input type="password" th:field="*{password}" class="form-control" id="password" required>
         </div>
         <div class="col-md-6">
+            <label for="firstName" class="form-label">First Name</label>
+            <input type="text" name="firstName" class="form-control" id="firstName">
+        </div>
+        <div class="col-md-6">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input type="text" name="lastName" class="form-control" id="lastName">
+        </div>
+        <div class="col-md-6">
             <label for="roles" class="form-label">Role</label>
             <select th:field="*{roles}" class="form-select" id="roles">
                 <option th:each="role : ${roles}" th:value="${role}" th:text="${role}">ROLE_USER</option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label for="position" class="form-label">Position</label>
+            <select name="positionId" class="form-select" id="position">
+                <option value="">Select Position</option>
+                <option th:each="position : ${positions}" th:value="${position.id}" th:text="${position.name}">Position</option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label for="department" class="form-label">Department</label>
+            <select name="departmentId" class="form-select" id="department">
+                <option value="">Select Department</option>
+                <option th:each="department : ${departments}" th:value="${department.id}" th:text="${department.name}">Department</option>
             </select>
         </div>
         <div class="col-md-3 form-check">

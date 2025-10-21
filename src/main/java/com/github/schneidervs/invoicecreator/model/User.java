@@ -38,7 +38,7 @@ public class User implements UserDetails {
                 .toList();
     }
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UserData userData;
 
     public Long getId() {
