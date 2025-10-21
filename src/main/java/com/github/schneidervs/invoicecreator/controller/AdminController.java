@@ -12,6 +12,8 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminController {
     private static final String REDIRECT_USERS = "redirect:/admin/users";
+    private static final String ROLES = "roles";
+    private static final String USERS = "users";
 
     private final UserService userService;
     private final PositionService positionService;
@@ -25,19 +27,25 @@ public class AdminController {
 
     @GetMapping("/users")
     public String manageUsers(Model model) {
-        model.addAttribute("users", userService.findAll());
+        model.addAttribute(USERS, userService.findAll());
         return "admin/users";
     }
 
     @GetMapping("/users/new")
     public String showCreateUserForm(Model model) {
-        model.addAttribute("user", new User());
-        model.addAttribute("roles", List.of(Role.values()));
+        model.addAttribute(USERS, new User());
+        model.addAttribute(ROLES, List.of(Role.values()));
         return "admin/new-user";
     }
 
     @PostMapping("/users/save")
-    public String createUser(@ModelAttribute("user") User user) {
+    public String createUser(@ModelAttribute("user") User user,Model model) {
+        if (userService.userExists(user.getUsername())) {
+            model.addAttribute("errorMessage", "User with username " + user.getUsername() + " already exists.");
+            model.addAttribute(USERS, user);
+            model.addAttribute(ROLES, List.of(Role.values()));
+            return "admin/new-user";
+        }
         userService.create(user);
         return REDIRECT_USERS;
     }
@@ -52,8 +60,8 @@ public class AdminController {
     public String showEditUserForm(@PathVariable Long id, Model model) {
         User user = userService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
-        model.addAttribute("user", user);
-        model.addAttribute("roles", List.of(Role.values()));
+        model.addAttribute(USERS, user);
+        model.addAttribute(ROLES, List.of(Role.values()));
         model.addAttribute("positions", positionService.findAll());
         model.addAttribute("departments", departmentService.findAll());
         return "admin/edit-user";
@@ -62,7 +70,7 @@ public class AdminController {
     @PostMapping("/users/update")
     public String updateUser(
             @RequestParam(value = "id", required = false) Long id, //kostyl
-            @ModelAttribute("user") User updatedUser) {
+            @ModelAttribute(USERS) User updatedUser) {
 
         User existingUser = userService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + updatedUser.getId()));
