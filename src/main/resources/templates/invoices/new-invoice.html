@@ -63,8 +63,8 @@
                         </div>
 
                         <div class="col-md-3">
-                            <label for="createdBy" class="form-label">Author</label>
-                            <input type="text" class="form-control" id="createdBy" th:field="*{createdBy}" readonly>
+                            <label for="currentUser" class="form-label">Author</label>
+                            <input type="text" th:value="${currentUser}" class="form-control" readonly>
                         </div>
 
                         <!-- Amounts -->

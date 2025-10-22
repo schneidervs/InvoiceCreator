@@ -64,7 +64,7 @@
 
         <div class="mb-3">
             <label>Created By</label>
-            <input type="text" th:field="*{createdBy}" class="form-control"/>
+            <input type="text" th:value="${invoice.createdByUser?.fullName ?: 'N/A'}" class="form-control" readonly>
         </div>
 
         <div class="d-flex gap-2">

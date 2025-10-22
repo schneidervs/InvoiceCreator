@@ -2,9 +2,11 @@ package com.github.schneidervs.invoicecreator.service;
 
 import com.github.schneidervs.invoicecreator.model.Invoice;
 import com.github.schneidervs.invoicecreator.model.MyCompany;
+import com.github.schneidervs.invoicecreator.model.User;
 import com.github.schneidervs.invoicecreator.repository.InvoiceRepository;
 import com.github.schneidervs.invoicecreator.InvoiceSpecifications;
 import com.github.schneidervs.invoicecreator.repository.MyCompanyRepository;
+import com.github.schneidervs.invoicecreator.repository.UserRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -20,11 +22,13 @@ public class InvoiceService {
     private final InvoiceRepository repository;
     private final InvoiceSpecifications invoiceSpecifications;
     private final MyCompanyRepository myCompanyRepository;
+    private final UserRepository userRepository;
 
-    public InvoiceService(InvoiceRepository repository, InvoiceSpecifications invoiceSpecifications, MyCompanyRepository myCompanyRepository) {
+    public InvoiceService(InvoiceRepository repository, InvoiceSpecifications invoiceSpecifications, MyCompanyRepository myCompanyRepository, UserRepository userRepository) {
         this.repository = repository;
         this.invoiceSpecifications = invoiceSpecifications;
         this.myCompanyRepository = myCompanyRepository;
+        this.userRepository = userRepository;
     }
 
     public List<Invoice> getRecentInvoices() {
@@ -44,16 +48,17 @@ public class InvoiceService {
         MyCompanyService myCompanyService = new MyCompanyService(myCompanyRepository);
         if (repository.count() == 0) {
             MyCompany defaultCompany = myCompanyService.findFirst();
+            User defaultUser = userRepository.findByUsername("admin").orElse(null);
             List<Invoice> testInvoices = List.of(
                     createTestInvoice("TEST-001", LocalDate.now(), "Client A", defaultCompany, "Service A",
                             new BigDecimal("100.00"), new BigDecimal("123.00"),
-                            "One hundred twenty-three zloty", LocalDate.now().plusDays(14), "admin"),
+                            "One hundred twenty-three zloty", LocalDate.now().plusDays(14), defaultUser),
                     createTestInvoice("TEST-002", LocalDate.now().minusDays(1), "Client B", defaultCompany, "Service B",
                             new BigDecimal("200.00"), new BigDecimal("246.00"),
-                            "Two hundred forty-six zloty", LocalDate.now().plusDays(13), "admin"),
+                            "Two hundred forty-six zloty", LocalDate.now().plusDays(13), defaultUser),
                     createTestInvoice("TEST-003", LocalDate.now().minusDays(2), "Client C", defaultCompany, "Service C",
                             new BigDecimal("300.00"), new BigDecimal("369.00"),
-                            "Three hundred sixty-nine zloty", LocalDate.now().plusDays(12), "admin")
+                            "Three hundred sixty-nine zloty", LocalDate.now().plusDays(12), defaultUser)
             );
             repository.saveAll(testInvoices);
         }
@@ -69,7 +74,7 @@ public class InvoiceService {
                                       BigDecimal gross,
                                       String amountInWords,
                                       LocalDate dueDate,
-                                      String createdBy) {
+                                      User createdByUser) {
         Invoice inv = new Invoice();
         inv.setInvoiceNumber(number);
         inv.setIssueDate(issueDate);
@@ -80,7 +85,7 @@ public class InvoiceService {
         inv.setGrossAmount(gross);
         inv.setAmountInWords(amountInWords);
         inv.setDueDate(dueDate);
-        inv.setCreatedBy(createdBy);
+        inv.setCreatedByUser(createdByUser);
         return inv;
     }
 

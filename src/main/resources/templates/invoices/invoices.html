@@ -53,7 +53,7 @@
                     <td th:text="${invoice.grossAmount}">123.45</td>
                     <td th:text="${invoice.amountInWords}">One hundred twenty-three PLN</td>
                     <td th:text="${invoice.dueDate}">2025-06-20</td>
-                    <td th:text="${invoice.createdBy}">admin</td>
+                    <td th:text="${invoice.createdByUser?.fullName ?: 'N/A'}">Creator Name</td>
                     <td>
                         <!-- Edit для STAFF и ADMIN -->
                         <a th:if="${#authorization.expression('hasRole(''ROLE_STAFF'') or hasRole(''ROLE_ADMIN'')')}"

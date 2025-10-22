@@ -1,6 +1,7 @@
 package com.github.schneidervs.invoicecreator.controller;
 
 import com.github.schneidervs.invoicecreator.model.Invoice;
+import com.github.schneidervs.invoicecreator.model.User;
 import com.github.schneidervs.invoicecreator.service.*;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Controller
@@ -22,7 +24,7 @@ public class InvoiceController {
     private final UserService userService;
     private final MyCompanyService myCompanyService;
 
-    public InvoiceController(InvoiceService invoiceService, UserService userService,MyCompanyService myCompanyService) {
+    public InvoiceController(InvoiceService invoiceService, UserService userService, MyCompanyService myCompanyService) {
         this.invoiceService = invoiceService;
         this.userService = userService;
         this.myCompanyService = myCompanyService;
@@ -36,12 +38,13 @@ public class InvoiceController {
         myCompanyService.createTestCompanyIfEmpty();
         invoiceService.saveTestInvoicesIfEmpty();
 
-        List<Invoice> invoices = (query!=null && !query.isBlank()) ?
+        List<Invoice> invoices = (query != null && !query.isBlank()) ?
                 invoiceService.searchInvoices(query) :
                 invoiceService.getRecentInvoices();
 
         model.addAttribute("invoices", invoices);
         model.addAttribute("query", query);
+
         return "invoices/invoices";
     }
 
@@ -56,20 +59,26 @@ public class InvoiceController {
         model.addAttribute("today", LocalDate.now());
         model.addAttribute("dueDate", LocalDate.now().plusDays(14));
         model.addAttribute("companies", myCompanyService.findAll());
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String currentUser = Optional.ofNullable(authentication)
+                .map(Authentication::getName)
+                .map(userService::getUserFullNameByUsername)
+                .orElse("anonymous");
+
+        model.addAttribute("currentUser", currentUser);
+
         return "invoices/new-invoice";
     }
 
     @PostMapping("/save")
     public String saveInvoice(@ModelAttribute("invoice") Invoice invoice) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username;
-        if (auth != null) {
-            username = auth.getName();
-        } else {
-            username = "anonymous";
-        }
-        String fullName = userService.getUserFullNameByUsername(username);
-        invoice.setCreatedBy(fullName);
+        String username = auth != null ? auth.getName() : "anonymous";
+        User user = userService.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+        invoice.setCreatedByUser(user);
         invoiceService.saveInvoice(invoice);
         return REDIRECT_INVOICES;
     }
@@ -79,6 +88,7 @@ public class InvoiceController {
         Invoice invoice = invoiceService.getInvoiceById(id); // метод нужно создать
         model.addAttribute("invoice", invoice);
         model.addAttribute("companies", myCompanyService.findAll());
+
         return "invoices/edit-invoice";
     }
 
@@ -97,15 +107,16 @@ public class InvoiceController {
         existingInvoice.setGrossAmount(updatedInvoice.getGrossAmount());
         existingInvoice.setAmountInWords(updatedInvoice.getAmountInWords());
         existingInvoice.setDueDate(updatedInvoice.getDueDate());
-        existingInvoice.setCreatedBy(updatedInvoice.getCreatedBy());
 
         invoiceService.saveInvoice(existingInvoice);
+
         return REDIRECT_INVOICES;
     }
 
     @PostMapping("/delete/{id}")
     public String deleteInvoice(@PathVariable Long id) {
         invoiceService.deleteInvoice(id);
+
         return REDIRECT_INVOICES;
     }
 }

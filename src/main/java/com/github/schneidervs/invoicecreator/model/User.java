@@ -114,4 +114,11 @@ public class User implements UserDetails {
     public void setUserData(UserData userData) {
         this.userData = userData;
     }
+
+    public String getFullName() {
+        if (userData != null) {
+            return userData.getFirstName() + " " + userData.getLastName();
+        }
+        return username;
+    }
 }

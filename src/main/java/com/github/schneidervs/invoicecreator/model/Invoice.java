@@ -20,11 +20,14 @@ public class Invoice {
     private BigDecimal grossAmount;
     private String amountInWords;
     private LocalDate dueDate;
-    private String createdBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "my_company_id")
     private MyCompany myCompany;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by_user_id")
+    private User createdByUser;
 
     public Long getId() {
         return id;
@@ -102,11 +105,11 @@ public class Invoice {
         this.dueDate = dueDate;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
+    public User getCreatedByUser() {
+        return createdByUser;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setCreatedByUser(User createdByUser) {
+        this.createdByUser = createdByUser;
     }
 }
