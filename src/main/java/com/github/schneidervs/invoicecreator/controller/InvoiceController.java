@@ -20,16 +20,20 @@ public class InvoiceController {
 
     private final InvoiceService invoiceService;
     private final UserService userService;
+    private final MyCompanyService myCompanyService;
 
-    public InvoiceController(InvoiceService invoiceService, UserService userService) {
+    public InvoiceController(InvoiceService invoiceService, UserService userService,MyCompanyService myCompanyService) {
         this.invoiceService = invoiceService;
         this.userService = userService;
+        this.myCompanyService = myCompanyService;
     }
 
     @GetMapping("")
     public String viewInvoices(
             @RequestParam(required = false)
             String query, Model model) {
+        invoiceService.saveTestInvoicesIfEmpty();
+        myCompanyService.createTestCompanyIfEmpty();
         invoiceService.saveTestInvoicesIfEmpty();
 
         List<Invoice> invoices = (query!=null && !query.isBlank()) ?
@@ -51,7 +55,8 @@ public class InvoiceController {
         model.addAttribute("invoice", new Invoice());
         model.addAttribute("today", LocalDate.now());
         model.addAttribute("dueDate", LocalDate.now().plusDays(14));
-        return "/invoices/new-invoice";
+        model.addAttribute("companies", myCompanyService.findAll());
+        return "invoices/new-invoice";
     }
 
     @PostMapping("/save")
@@ -73,6 +78,7 @@ public class InvoiceController {
     public String showEditForm(@PathVariable Long id, Model model) {
         Invoice invoice = invoiceService.getInvoiceById(id); // метод нужно создать
         model.addAttribute("invoice", invoice);
+        model.addAttribute("companies", myCompanyService.findAll());
         return "invoices/edit-invoice";
     }
 
@@ -85,7 +91,7 @@ public class InvoiceController {
         existingInvoice.setInvoiceNumber(updatedInvoice.getInvoiceNumber());
         existingInvoice.setIssueDate(updatedInvoice.getIssueDate());
         existingInvoice.setClientData(updatedInvoice.getClientData());
-        existingInvoice.setCompanyData(updatedInvoice.getCompanyData());
+        existingInvoice.setMyCompany(updatedInvoice.getMyCompany());
         existingInvoice.setServiceDescription(updatedInvoice.getServiceDescription());
         existingInvoice.setNetAmount(updatedInvoice.getNetAmount());
         existingInvoice.setGrossAmount(updatedInvoice.getGrossAmount());

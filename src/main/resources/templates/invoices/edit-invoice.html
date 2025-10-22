@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Edit Invoice</title>
@@ -12,47 +12,59 @@
     <form th:action="@{/invoices/update}" th:object="${invoice}" method="post" class="mb-3">
         <div class="mb-3">
             <label>ID</label>
-            <input type="text" th:field="*{id}" class="form-control" readonly />
+            <input type="text" th:field="*{id}" class="form-control" readonly/>
         </div>
         <div class="mb-3">
             <label>Invoice Number</label>
-            <input type="text" th:field="*{invoiceNumber}" class="form-control" />
+            <input type="text" th:field="*{invoiceNumber}" class="form-control"/>
         </div>
         <div class="mb-3">
             <label>Issue Date</label>
-            <input type="date" th:field="*{issueDate}" class="form-control" />
+            <input type="date" th:field="*{issueDate}" class="form-control"/>
         </div>
         <div class="mb-3">
             <label>Client Data</label>
-            <input type="text" th:field="*{clientData}" class="form-control" />
+            <input type="text" th:field="*{clientData}" class="form-control"/>
         </div>
         <div class="mb-3">
             <label>Company Data</label>
-            <input type="text" th:field="*{companyData}" class="form-control" />
+            <select class="form-select" th:field="*{myCompany.id}" required>
+                <option value="" disabled>Select your company</option>
+                <option th:each="company : ${companies}"
+                        th:value="${company.id}"
+                        th:text="${company.name}">
+                </option>
+            </select>
         </div>
+
         <div class="mb-3">
             <label>Service Description</label>
             <textarea th:field="*{serviceDescription}" class="form-control"></textarea>
         </div>
+
         <div class="mb-3">
             <label>Net Amount</label>
-            <input type="number" step="0.01" th:field="*{netAmount}" class="form-control" />
+            <input type="number" step="0.01" th:field="*{netAmount}" class="form-control"/>
         </div>
+
         <div class="mb-3">
             <label>Gross Amount</label>
-            <input type="number" step="0.01" th:field="*{grossAmount}" class="form-control" />
+            <input type="number" step="0.01" th:field="*{grossAmount}" class="form-control"/>
         </div>
+
         <div class="mb-3">
             <label>Amount in Words</label>
-            <input type="text" th:field="*{amountInWords}" class="form-control" />
+            <input type="text" th:field="*{amountInWords}" class="form-control"/>
         </div>
+
         <div class="mb-3">
             <label>Due Date</label>
-            <input type="date" th:field="*{dueDate}" class="form-control" />
+            <input type="date" th:field="*{dueDate}" class="form-control"/>
         </div>
+
         <div class="mb-3">
             <label>Created By</label>
-            <input type="text" th:field="*{createdBy}" class="form-control" />
+            <input type="text" th:field="*{createdBy}" class="form-control"/>
         </div>
 
         <div class="d-flex gap-2">

@@ -47,7 +47,7 @@
                     <td th:text="${invoice.invoiceNumber}">INV-000</td>
                     <td th:text="${invoice.issueDate}">2025-06-13</td>
                     <td th:text="${invoice.clientData}">Client Name</td>
-                    <td th:text="${invoice.companyData}">Company Info</td>
+                    <td th:text="${invoice.myCompany?.name ?: 'N/A'}">Company Name</td>
                     <td th:text="${invoice.serviceDescription}">Service Description</td>
                     <td th:text="${invoice.netAmount}">100.00</td>
                     <td th:text="${invoice.grossAmount}">123.45</td>

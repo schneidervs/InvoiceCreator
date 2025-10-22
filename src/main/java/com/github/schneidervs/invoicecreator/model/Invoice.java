@@ -15,13 +15,16 @@ public class Invoice {
     private String invoiceNumber;
     private LocalDate issueDate;
     private String clientData;
-    private String companyData;
     private String serviceDescription;
     private BigDecimal netAmount;
     private BigDecimal grossAmount;
     private String amountInWords;
     private LocalDate dueDate;
     private String createdBy;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "my_company_id")
+    private MyCompany myCompany;
 
     public Long getId() {
         return id;
@@ -51,12 +54,12 @@ public class Invoice {
         this.clientData = clientData;
     }
 
-    public String getCompanyData() {
-        return companyData;
+    public MyCompany getMyCompany() {
+        return myCompany;
     }
 
-    public void setCompanyData(String companyData) {
-        this.companyData = companyData;
+    public void setMyCompany(MyCompany myCompany) {
+        this.myCompany = myCompany;
     }
 
     public String getServiceDescription() {

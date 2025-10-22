@@ -27,6 +27,17 @@ public class MyCompanyService {
         List<MyCompany> companies = myCompanyRepository.findAll();
         return companies.isEmpty() ? null : companies.get(0);
     }
+    public void createTestCompanyIfEmpty() {
+        if (myCompanyRepository.count() == 0) {
+            MyCompany testCompany = new MyCompany();
+            testCompany.setName("Test Company");
+            testCompany.setStreet("Test Street 123");
+            testCompany.setCity("Test City");
+            testCompany.setPostalCode("00-000");
+            testCompany.setNip("1234567890");
+            myCompanyRepository.save(testCompany);
+        }
+    }
 
     public void create(MyCompany company) {
         myCompanyRepository.save(company);

@@ -1,8 +1,10 @@
 package com.github.schneidervs.invoicecreator.service;
 
 import com.github.schneidervs.invoicecreator.model.Invoice;
+import com.github.schneidervs.invoicecreator.model.MyCompany;
 import com.github.schneidervs.invoicecreator.repository.InvoiceRepository;
-import com.github.schneidervs.invoicecreator.repository.InvoiceSpecifications;
+import com.github.schneidervs.invoicecreator.InvoiceSpecifications;
+import com.github.schneidervs.invoicecreator.repository.MyCompanyRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -17,10 +19,12 @@ public class InvoiceService {
 
     private final InvoiceRepository repository;
     private final InvoiceSpecifications invoiceSpecifications;
+    private final MyCompanyRepository myCompanyRepository;
 
-    public InvoiceService(InvoiceRepository repository, InvoiceSpecifications invoiceSpecifications) {
+    public InvoiceService(InvoiceRepository repository, InvoiceSpecifications invoiceSpecifications, MyCompanyRepository myCompanyRepository) {
         this.repository = repository;
         this.invoiceSpecifications = invoiceSpecifications;
+        this.myCompanyRepository = myCompanyRepository;
     }
 
     public List<Invoice> getRecentInvoices() {
@@ -37,15 +41,17 @@ public class InvoiceService {
     }
 
     public void saveTestInvoicesIfEmpty() {
+        MyCompanyService myCompanyService = new MyCompanyService(myCompanyRepository);
         if (repository.count() == 0) {
+            MyCompany defaultCompany = myCompanyService.findFirst();
             List<Invoice> testInvoices = List.of(
-                    createTestInvoice("TEST-001", LocalDate.now(), "Client A", "Company X", "Service A",
+                    createTestInvoice("TEST-001", LocalDate.now(), "Client A", defaultCompany, "Service A",
                             new BigDecimal("100.00"), new BigDecimal("123.00"),
                             "One hundred twenty-three zloty", LocalDate.now().plusDays(14), "admin"),
-                    createTestInvoice("TEST-002", LocalDate.now().minusDays(1), "Client B", "Company X", "Service B",
+                    createTestInvoice("TEST-002", LocalDate.now().minusDays(1), "Client B", defaultCompany, "Service B",
                             new BigDecimal("200.00"), new BigDecimal("246.00"),
                             "Two hundred forty-six zloty", LocalDate.now().plusDays(13), "admin"),
-                    createTestInvoice("TEST-003", LocalDate.now().minusDays(2), "Client C", "Company X", "Service C",
+                    createTestInvoice("TEST-003", LocalDate.now().minusDays(2), "Client C", defaultCompany, "Service C",
                             new BigDecimal("300.00"), new BigDecimal("369.00"),
                             "Three hundred sixty-nine zloty", LocalDate.now().plusDays(12), "admin")
             );
@@ -57,7 +63,7 @@ public class InvoiceService {
     private Invoice createTestInvoice(String number,
                                       LocalDate issueDate,
                                       String clientData,
-                                      String companyData,
+                                      MyCompany myCompanyData,
                                       String serviceDescription,
                                       BigDecimal net,
                                       BigDecimal gross,
@@ -68,7 +74,7 @@ public class InvoiceService {
         inv.setInvoiceNumber(number);
         inv.setIssueDate(issueDate);
         inv.setClientData(clientData);
-        inv.setCompanyData(companyData);
+        inv.setMyCompany(myCompanyData);
         inv.setServiceDescription(serviceDescription);
         inv.setNetAmount(net);
         inv.setGrossAmount(gross);
